@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHSS Koduvally - Learn English & Malayalam</title>
+    <style>
+        :root {
+            --primary: #FF4757;
+            --secondary: #2ED573;
+            --accent: #1E90FF;
+            --bg: #F1F2F6;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            margin: 0;
+            background-color: #2F3542;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Mobile Container */
+        .mobile-app {
+            width: 100%;
+            max-width: 414px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        header {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .lang-switch {
+            display: flex;
+            padding: 10px;
+            gap: 10px;
+            background: white;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #dfe4ea;
+        }
+
+        .btn-ml.active { background: var(--secondary); color: white; }
+        .btn-en.active { background: var(--accent); color: white; }
+
+        /* Grid */
+        #content-grid {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-bottom: 5px solid #ddd;
+            cursor: pointer;
+        }
+
+        .card:active { transform: translateY(4px); border-bottom: 2px solid #ddd; }
+
+        .letter-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #2F3542;
+            display: block;
+        }
+
+        .word-display {
+            font-size: 1.2rem;
+            color: #57606F;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
+
+        footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-app">
+    <header>
+        <h2 style="margin:0; color:var(--primary)">🍎 Let's Learn!</h2>
+    </header>
+
+    <div class="lang-switch">
+        <button class="btn btn-ml active" onclick="loadContent('ml')">മലയാളം</button>
+        <button class="btn btn-en" onclick="loadContent('en')">English</button>
+    </div>
+
+    <div id="content-grid"></div>
+
+    <footer>GHSS Koduvally (Clikture)</footer>
+</div>
+
+<script>
+    const data = {
+        ml: [
+            /* Swarangal (Vowels) */
+            {l:'അ', w:'അമ്മ', e:'👩‍👦', s:'Amma'}, {l:'ആ', w:'ആന', e:'🐘', s:'Aana'},
+            {l:'ഇ', w:'ഇല', e:'🍃', s:'Ila'}, {l:'ഈ', w:'ഈച്ച', e:'🪰', s:'Eecha'},
+            {l:'ഉ', w:'ഉരൽ', e:'🥣', s:'Ural'}, {l:'ഊ', w:'ഊഞ്ഞാൽ', e:'🪑', s:'Oonjal'},
+            {l:'ഋ', w:'ഋഷി', e:'🧘', s:'Rishi'}, {l:'എ', w:'എലി', e:'🐭', s:'Eli'},
+            {l:'ഏ', w:'ഏണി', e:'🪜', s:'Eni'}, {l:'ഐ', w:'ഐസ്', e:'🧊', s:'Ice'},
+            {l:'ഒ', w:'ഒട്ടകം', e:'🐪', s:'Ottakam'}, {l:'ഓ', w:'ഓന്ത്', e:'🦎', s:'Oanthu'},
+            {l:'ഔ', w:'ഔഷധം', e:'💊', s:'Oushadham'}, {l:'അം', w:'അംബുജം', e:'🪷', s:'Ambujam'},
+            {l:'അഃ', w:'ദുഃഖം', e:'😢', s:'Dukham'},
+            /* Vyanjanangal (Consonants) */
+            {l:'ക', w:'കണ്ണാടി', e:'🪞', s:'Kannadi'}, {l:'ഖ', w:'ഖഡ്ഗം', e:'⚔️', s:'Khadgam'},
+            {l:'ഗ', w:'ഗജം', e:'🐘', s:'Gajam'}, {l:'ഘ', w:'ഘടികാരം', e:'⏰', s:'Ghadikaram'},
+            {l:'ങ', w:'മാങ്ങ', e:'🥭', s:'Maanga'}, {l:'ച', w:'ചക്ര', e:'🎡', s:'Chakram'},
+            {l:'ഛ', w:'ഛായ', e:'☕', s:'Chaya'}, {l:'ജ', w:'ജലം', e:'💧', s:'Jalam'},
+            {l:'ഝ', w:'ഝാൻസി', e:'🐎', s:'Jhansi'}, {l:'ഞ', w:'ഞണ്ട്', e:'🦀', s:'Njandu'},
+            {l:'ട', w:'ടയർ', e:'🛞', s:'Tire'}, {l:'ഠ', w:'പാഠം', e:'📖', s:'Paadam'},
+            {l:'ഡ', w:'ഡബ്ബ', e:'📦', s:'Dabba'}, {l:'ഢ', w:'ഢക്ക', e:'🥁', s:'Dhakka'},
+            {l:'ണ', w:'പണം', e:'💰', s:'Panam'}, {l:'ത', w:'തല', e:'👱', s:'Thala'},
+            {l:'ഥ', w:'രഥം', e:'🛒', s:'Ratham'}, {l:'ദ', w:'ദയ', e:'❤️', s:'Daya'},
+            {l:'ധ', w:'ധനം', e:'🪙', s:'Dhanam'}, {l:'ന', w:'നരി', e:'🦊', s:'Nari'},
+            {l:'പ', w:'പന്ത്', e:'⚽', s:'Panthu'}, {l:'ഫ', w:'ഫലം', e:'🍏', s:'Phalam'},
+            {l:'ബ', w:'ബസ്', e:'🚌', s:'Bus'}, {l:'ഭ', w:'ഭക്ഷണം', e:'🍱', s:'Bhakshanam'},
+            {l:'മ', w:'മരം', e:'🌳', s:'Maram'}, {l:'യ', w:'യമുന', e:'🌊', s:'Yamuna'},
+            {l:'ര', w:'രവി', e:'☀️', s:'Ravi'}, {l:'ല', w:'ലത', e:'🌿', s:'Latha'},
+            {l:'വ', w:'വല', e:'🕸️', s:'Vala'}, {l:'ശ', w:'ശരം', e:'🏹', s:'Sharam'},
+            {l:'ഷ', w:'ഷൺമുഖം', e:'🔱', s:'Shanmukham'}, {l:'സ', w:'സഞ്ചി', e:'🛍️', s:'Sanchi'},
+            {l:'ഹ', w:'ഹാരം', e:'📿', s:'Haaram'}, {l:'ള', w:'വാള', e:'🗡️', s:'Vaala'},
+            {l:'ഴ', w:'പുഴ', e:'🛶', s:'Puzha'}, {l:'റ', w:'അറ', e:'🛖', s:'Ara'}
+        ],
+        en: [
+            {l:'A', w:'Apple', e:'🍎'}, {l:'B', w:'Ball', e:'⚽'}, {l:'C', w:'Cat', e:'🐱'},
+            {l:'D', w:'Dog', e:'🐶'}, {l:'E', w:'Egg', e:'🥚'}, {l:'F', w:'Fish', e:'🐟'},
+            {l:'G', w:'Grapes', e:'🍇'}, {l:'H', w:'Hat', e:'🎩'}, {l:'I', w:'Igloo', e:'❄️'},
+            {l:'J', w:'Jam', e:'🍓'}, {l:'K', w:'Kite', e:'🪁'}, {l:'L', w:'Lion', e:'🦁'},
+            {l:'M', w:'Monkey', e:'🐵'}, {l:'N', w:'Nose', e:'👃'}, {l:'O', w:'Orange', e:'🍊'},
+            {l:'P', w:'Parrot', e:'🦜'}, {l:'Q', w:'Queen', e:'👸'}, {l:'R', w:'Rabbit', e:'🐰'},
+            {l:'S', w:'Sun', e:'☀️'}, {l:'T', w:'Tiger', e:'🐯'}, {l:'U', w:'Umbrella', e:'☂️'},
+            {l:'V', w:'Van', e:'🚐'}, {l:'W', w:'Watch', e:'⌚'}, {l:'X', w:'Xylophone', e:'🎹'},
+            {l:'Y', w:'Yo-yo', e:'🪀'}, {l:'Z', w:'Zebra', e:'🦓'}
+        ]
+    };
+
+    function loadContent(lang) {
+        const container = document.getElementById('content-grid');
+        container.innerHTML = '';
+        document.querySelector('.btn-ml').classList.toggle('active', lang === 'ml');
+        document.querySelector('.btn-en').classList.toggle('active', lang === 'en');
+
+        data[lang].forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const speechText = lang === 'en' ? `${item.l} for ${item.w}` : item.s;
+            card.onclick = () => playSound(speechText, lang);
+            
+            card.innerHTML = `
+                <span class="emoji">${item.e}</span>
+                <span class="letter-display">${item.l}</span>
+                <span class="word-display">${item.w}</span>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function playSound(text, lang) {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        
+        // Find a female voice if available
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google US English') || v.name.includes('Samantha') || v.name.includes('Zira'));
+        
+        if (femaleVoice) msg.voice = femaleVoice;
+
+        msg.lang = lang === 'ml' ? 'ml-IN' : 'en-US';
+        msg.rate = 0.6; // Very slow speed
+        msg.pitch = 1.6; // High pitch for a girl/kid voice
+        window.speechSynthesis.speak(msg);
+    }
+
+    loadContent('ml');
+    // Pre-load voices for browsers
+    window.speechSynthesis.onvoiceschanged = () => loadContent('ml');
+</script>
+
+</body>
+</html>
